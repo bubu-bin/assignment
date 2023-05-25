@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,133 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  password  String
+  email     String   @unique
+  name      String
+  surname   String
+  createdAt DateTime @default(now()) @map("created_at")
+  form      Form[]
+
+  @@map("users")
+}
+
+model ProductCategory {
+  id        Int                       @id @default(autoincrement())
+  name      ProductCategoryDefinition
+  questions Question[]
+  form      Form[]
+
+  @@map("product_categories")
+}
+
+enum ProductCategoryDefinition {
+  CAR_DEAL
+  VEHICLE_INSURANCE
+}
+
+model Question {
+  id                                           Int                                  @id @default(autoincrement())
+  isInterDependent                             Boolean                              @map("is_inter_dependent")
+  order                                        String
+  prompt                                       String
+  options                                      Option[]
+  createdAt                                    DateTime                             @default(now()) @map("created_at")
+  updatedAt                                    DateTime                             @updatedAt @map("updated_at")
+  productCategory                              ProductCategory                      @relation(fields: [productCategoryId], references: [id], onDelete: Restrict)
+  productCategoryId                            Int                                  @map("product_category_id")
+  questionType                                 QuestionType                         @relation(fields: [questionTypeId], references: [id], onDelete: Restrict)
+  questionTypeId                               Int                                  @map("question_type_id")
+  inputType                                    InputType                            @relation(fields: [inputTypeId], references: [id], onDelete: Restrict)
+  inputTypeId                                  Int                                  @map("input_type_id")
+  selfReferenceInterDependentQuestionsRelation QuestionsOnInterDependentQuestions[] @relation("Question")
+  interDependentQuestions                      QuestionsOnInterDependentQuestions[] @relation("InterDependentQuestion")
+  formData                                     FormData[]
+
+  @@map("questions")
+}
+
+model QuestionType {
+  id        Int                    @id @default(autoincrement())
+  name      QuestionTypeDefinition
+  questions Question[]
+
+  @@map("question_types")
+}
+
+enum QuestionTypeDefinition {
+  OPTION
+  BOOLEAN
+  INPUT
+}
+
+model InputType {
+  id        Int                 @id @default(autoincrement())
+  name      InputTypeDefinition
+  questions Question[]
+
+  @@map("input_types")
+}
+
+enum InputTypeDefinition {
+  CHECKBOX
+  RADIO
+  TEXT
+}
+
+model Option {
+  id         Int      @id @default(autoincrement())
+  value      String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId Int      @map("question_id")
+
+  @@map("options")
+}
+
+model QuestionsOnInterDependentQuestions {
+  id                      Int               @id @default(autoincrement())
+  question                Question          @relation("Question", fields: [questionId], references: [id], onDelete: Cascade)
+  questionId              Int               @map("question_id")
+  interDepedentQuestion   Question          @relation("InterDependentQuestion", fields: [interDepedentQuestionId], references: [id], onDelete: Cascade)
+  interDepedentQuestionId Int               @map("depedent_question_id")
+  triggerCondition        TriggerCondition? @relation(fields: [triggerConditionId], references: [id], onDelete: Restrict)
+  triggerConditionId      Int               @unique @map("trigger_condition_id")
+
+  @@map("dependent_questions")
+}
+
+model TriggerCondition {
+  id                                 Int                                 @id @default(autoincrement())
+  questionsOnInterDependentQuestions QuestionsOnInterDependentQuestions?
+  fulfillment                        Json
+
+  @@map("trigger_conditions")
+}
+
+model Form {
+  id                Int             @id @default(autoincrement())
+  userId            Int             @map("user_id")
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  formData          FormData[]
+  productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id], onDelete: Restrict)
+  productCategoryId Int             @map("product_category_id")
+
+  @@unique([productCategoryId, userId])
+  @@map("forms")
+}
+
+model FormData {
+  id         Int      @id @default(autoincrement())
+  formId     Int      @map("form_id")
+  form       Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+  answer     Json
+  questionId Int      @map("question_id")
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@map("form_data")
 }
