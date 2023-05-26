@@ -34,22 +34,22 @@ enum ProductCategoryDefinition {
 }
 
 model Question {
-  id                                           Int                                  @id @default(autoincrement())
-  isInterDependent                             Boolean                              @map("is_inter_dependent")
-  order                                        String
-  prompt                                       String
-  options                                      Option[]
-  createdAt                                    DateTime                             @default(now()) @map("created_at")
-  updatedAt                                    DateTime                             @updatedAt @map("updated_at")
-  productCategory                              ProductCategory                      @relation(fields: [productCategoryId], references: [id], onDelete: Restrict)
-  productCategoryId                            Int                                  @map("product_category_id")
-  questionType                                 QuestionType                         @relation(fields: [questionTypeId], references: [id], onDelete: Restrict)
-  questionTypeId                               Int                                  @map("question_type_id")
-  inputType                                    InputType                            @relation(fields: [inputTypeId], references: [id], onDelete: Restrict)
-  inputTypeId                                  Int                                  @map("input_type_id")
-  selfReferenceInterDependentQuestionsRelation QuestionsOnInterDependentQuestions[] @relation("Question")
-  interDependentQuestions                      QuestionsOnInterDependentQuestions[] @relation("InterDependentQuestion")
-  formData                                     FormData[]
+  id                           Int                                  @id @default(autoincrement())
+  isInterDependent             Boolean                              @map("is_inter_dependent")
+  order                        String
+  prompt                       String
+  options                      Option[]
+  createdAt                    DateTime                             @default(now()) @map("created_at")
+  updatedAt                    DateTime                             @updatedAt @map("updated_at")
+  productCategory              ProductCategory                      @relation(fields: [productCategoryId], references: [id], onDelete: Restrict)
+  productCategoryId            Int                                  @map("product_category_id")
+  questionType                 QuestionType                         @relation(fields: [questionTypeId], references: [id], onDelete: Restrict)
+  questionTypeId               Int                                  @map("question_type_id")
+  inputType                    InputType                            @relation(fields: [inputTypeId], references: [id], onDelete: Restrict)
+  inputTypeId                  Int                                  @map("input_type_id")
+  selfReferenceLeadingQuestion QuestionsOnInterDependentQuestions[] @relation("LeadingQuestion")
+  interDependentQuestions      QuestionsOnInterDependentQuestions[] @relation("InterDependentQuestion")
+  formData                     FormData[]
 
   @@map("questions")
 }
@@ -92,23 +92,24 @@ model Option {
 }
 
 model QuestionsOnInterDependentQuestions {
-  id                      Int               @id @default(autoincrement())
-  question                Question          @relation("Question", fields: [questionId], references: [id], onDelete: Cascade)
-  questionId              Int               @map("question_id")
-  interDepedentQuestion   Question          @relation("InterDependentQuestion", fields: [interDepedentQuestionId], references: [id], onDelete: Cascade)
-  interDepedentQuestionId Int               @map("depedent_question_id")
-  triggerCondition        TriggerCondition? @relation(fields: [triggerConditionId], references: [id], onDelete: Restrict)
-  triggerConditionId      Int               @unique @map("trigger_condition_id")
+  id                       Int                 @id @default(autoincrement())
+  leadingQuestion          Question            @relation("LeadingQuestion", fields: [questionId], references: [id], onDelete: Cascade)
+  questionId               Int                 @map("question_id")
+  interDependentQuestion   Question            @relation("InterDependentQuestion", fields: [interDependentQuestionId], references: [id], onDelete: Cascade)
+  interDependentQuestionId Int                 @map("inter_depedent_question_id")
+  inputOutputTrigger       InputOutputTrigger? @relation(fields: [inputOutputTriggerId], references: [id], onDelete: Restrict)
+  inputOutputTriggerId     Int                 @unique @map("input_output_trigger_id")
 
-  @@map("dependent_questions")
+  @@map("inter_dependent_questions")
 }
 
-model TriggerCondition {
+model InputOutputTrigger {
   id                                 Int                                 @id @default(autoincrement())
   questionsOnInterDependentQuestions QuestionsOnInterDependentQuestions?
-  fulfillment                        Json
+  inputWhen                          Json                                @map("input_when")
+  outputWith                         Json                                @map("output_with")
 
-  @@map("trigger_conditions")
+  @@map("input_output_triggers")
 }
 
 model Form {
