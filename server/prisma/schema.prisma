@@ -93,8 +93,8 @@ model Option {
 
 model QuestionsOnInterDependentQuestions {
   id                       Int                 @id @default(autoincrement())
-  leadingQuestion          Question            @relation("LeadingQuestion", fields: [questionId], references: [id], onDelete: Cascade)
-  questionId               Int                 @map("question_id")
+  leadingQuestion          Question            @relation("LeadingQuestion", fields: [leadingQuestionId], references: [id], onDelete: Cascade)
+  leadingQuestionId        Int                 @map("leading_question_id")
   interDependentQuestion   Question            @relation("InterDependentQuestion", fields: [interDependentQuestionId], references: [id], onDelete: Cascade)
   interDependentQuestionId Int                 @map("inter_depedent_question_id")
   inputOutputTrigger       InputOutputTrigger? @relation(fields: [inputOutputTriggerId], references: [id], onDelete: Restrict)
