@@ -1,0 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'topbar topbar'
+    'sidebar body ';
+  height: 100vh;
+}
+
+.top-bar {
+  grid-area: topbar;
+}
+
+.body {
+  grid-area: body;
+}
+
+.side-bar {
+  grid-area: sidebar;
+}
