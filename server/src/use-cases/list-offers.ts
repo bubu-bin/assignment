@@ -32,7 +32,6 @@ const makeListOffers = ({ repository }: { repository: Repository }) => {
       }
     });
 
-    // TODO: these filters should be applied to find specific offers
     const filters = form.formData.map((f) => ({
       filterName: f.question.name,
       filterValue: f.answer

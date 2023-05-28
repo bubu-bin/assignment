@@ -1,22 +1,16 @@
-import { ServerErrorDefinition } from '../types';
-
 export class ApplicationError extends Error {
-  public statusCode: number;
-  public type: ServerErrorDefinition;
+  public statusCode?: string;
 
   constructor({
     message,
-    statusCode,
-    type
+    statusCode
   }: {
     message: string;
-    statusCode: number;
-    type: ServerErrorDefinition;
+    statusCode?: string;
   }) {
     super(message);
 
     this.statusCode = statusCode;
-    this.type = type;
 
     Object.setPrototypeOf(this, ApplicationError.prototype);
   }

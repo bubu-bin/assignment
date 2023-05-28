@@ -13,6 +13,7 @@ import makeFormApi from '../api/formApi';
 import makeQuestionApi from '../api/questionApi';
 import makeOfferApi from '../api/offerApi';
 import { FormStatus, FormikValues } from '../types';
+import { ApplicationError } from '../handlers/ApplicationError';
 
 const api = {
   form: makeFormApi({
@@ -51,9 +52,11 @@ const InsuranceOffers = () => {
     try {
       await fetchOffersApi();
     } catch (err) {
-      setFormStatus('NOT_FILLED');
-      const openDialog = isDialogOpen.setTrue;
-      openDialog();
+      if (err instanceof ApplicationError) {
+        setFormStatus('NOT_FILLED');
+        const openDialog = isDialogOpen.setTrue;
+        openDialog();
+      }
     }
   }, [fetchOffersApi, isDialogOpen.setTrue]);
 

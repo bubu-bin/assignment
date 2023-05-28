@@ -14,8 +14,7 @@ import makeFormApi from '../api/formApi';
 import makeQuestionApi from '../api/questionApi';
 import makeOfferApi from '../api/offerApi';
 import { FormStatus, FormikValues } from '../types';
-
-// TODO: handle loading
+import { ApplicationError } from '../handlers/ApplicationError';
 
 const api = {
   form: makeFormApi({
@@ -54,10 +53,11 @@ const CarDeals = () => {
     try {
       await fetchOffersApi();
     } catch (err) {
-      // TODO: check the err if the err is 404 then fetch the questions
-      setFormStatus('NOT_FILLED');
-      const openDialog = isDialogOpen.setTrue;
-      openDialog();
+      if (err instanceof ApplicationError) {
+        setFormStatus('NOT_FILLED');
+        const openDialog = isDialogOpen.setTrue;
+        openDialog();
+      }
     }
   }, [fetchOffersApi, isDialogOpen.setTrue]);
 

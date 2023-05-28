@@ -34,7 +34,6 @@ const makeListFormData = ({ repository }: { repository: Repository }) => {
       }
     });
 
-    // TODO: if not found return NULL, now is error which needs to be handled
     return formData;
   };
 

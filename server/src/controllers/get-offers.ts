@@ -1,8 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
-import { ListProductCategories } from '../use-cases/list-product-categories';
 import { ListOffers } from '../use-cases/list-offers';
 
-// TODO: handle any
 export type GetOffersRequestParams = any;
 
 const makeGetOffers = ({ listOffers }: { listOffers: ListOffers }) => {

@@ -3,8 +3,6 @@ import controllers from '../controllers';
 
 const routes = Router();
 
-// TODO: into seperate routes
-// TODO: handle params checking
 routes.get('/product_categories', controllers.getProductCategories);
 routes.get('/user', controllers.getUser);
 routes.get('/questions', controllers.getQuestions);

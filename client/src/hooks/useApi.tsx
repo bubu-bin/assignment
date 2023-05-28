@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useCallback, useState, useRef } from 'react';
 import axiosInstance from '../api';
-import { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig, isAxiosError } from 'axios';
+import { ApplicationError } from '../handlers/ApplicationError';
 
 interface State<T> {
   data?: T;
@@ -62,9 +63,11 @@ function useApi<T = unknown>({ throwError, requestConfig }: UseApiProps) {
 
         dispatch({ type: 'fetched', payload: data });
       } catch (error) {
-        // TODO: handle err message
-        if (throwError) {
-          throw new Error('error');
+        if (isAxiosError(error) && throwError) {
+          throw new ApplicationError({
+            message: error.message,
+            statusCode: error.code
+          });
         }
 
         dispatch({ type: 'error', payload: error as Error });

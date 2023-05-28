@@ -1,5 +1,3 @@
-// TODO: name it like FetchQuestions or smth
-// TODO: create origin types
 export interface Question {
   isInterDependent: boolean;
   order: string;
@@ -18,7 +16,6 @@ export interface Question {
   interDependentQuestionsId: number[];
 }
 
-// TODO: name it like FetchFormData
 export interface QuestionWithAnswer {
   isInterDependent: boolean;
   order: string;

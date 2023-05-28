@@ -1,7 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
 import { AddForm } from '../use-cases/add-form';
 
-// TODO: maybe to seperate file with all types
 export type PostFormBody = any;
 
 const makePostForm = ({ addForm }: { addForm: AddForm }) => {

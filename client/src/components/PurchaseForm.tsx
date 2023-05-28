@@ -29,9 +29,7 @@ export default function PurchaseForm({
 
   const { actions, formik } = useFormBuilder({
     onFormSubmit,
-    onTrigger: async ({ question: leadingQuestion, value, formikState }) => {
-      // TODO: handle by removing this functionality i guess
-    }
+    onTrigger: async ({ question: leadingQuestion, value, formikState }) => {}
   });
 
   useEffect(() => {
@@ -56,9 +54,7 @@ export default function PurchaseForm({
   const sortedQuestionnaireData = useMemo(() => {
     if (!questionnaireData.data) return [];
 
-    // TODO: it is not working
-    const order = _.orderBy(questionnaireData.data, ['order'], 'asc');
-    return order;
+    return _.orderBy(questionnaireData.data, ['order'], 'asc');
   }, [questionnaireData.data]);
 
   return (

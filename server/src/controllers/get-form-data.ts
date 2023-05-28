@@ -11,7 +11,6 @@ import {
 } from '@prisma/client';
 import _ from 'lodash';
 
-// TODO: handle any
 export type GetFormDataRequestParams = any;
 
 type FormatterData = FormData & {
@@ -24,7 +23,6 @@ type FormatterData = FormData & {
   };
 };
 
-// TODO: create a service from it to handle the formatting and all stuff concerning question
 const formatter = (data: FormatterData) => {
   const { question } = data;
   let value: unknown;

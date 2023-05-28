@@ -10,7 +10,6 @@ import {
   FormTypeDefinition
 } from '@prisma/client';
 
-// TODO: fast function to get options. Should be somewhere else
 const getOptions = (
   question: Question & {
     inputType: InputType;
@@ -50,8 +49,6 @@ const makeGetQuestions = ({
 
       const result = await listQuestions.execute(params);
 
-      // TODO: different handling for formatters
-      // TODO: optimize later the hasInter...
       const format = result
         ?.map((r) => ({
           ..._.pick(r, [

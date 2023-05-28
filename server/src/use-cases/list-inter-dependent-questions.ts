@@ -3,8 +3,6 @@ import { GetInterDependentQuestionsQuery } from '../controllers/get-inter-depend
 import { Repository } from '../repository';
 import _ from 'lodash';
 
-// TODO: create some QuestionTriggerConfig
-
 const makeListInterDependentQuestions = ({
   repository
 }: {
@@ -87,11 +85,9 @@ const makeListInterDependentQuestions = ({
           interDependentQuestion.interDependentQuestions.map(
             (interDependentQuestion) => interDependentQuestion.id
           )
-        // hasInterDependentQuestions: question.interDependentQuestions.length > 0
       };
     });
 
-    // TODO: this only perform when leadingQuestion is multi
     const groupedQuestions = _.groupBy(result, 'id');
 
     const mergedQuestions = Object.values(groupedQuestions).map((questions) => {

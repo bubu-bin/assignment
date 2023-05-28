@@ -13,19 +13,13 @@ import { FormStatus, FormikValues } from '../types';
 import _ from 'lodash';
 import { MultiHandler } from '../handlers/MultiHandler';
 
-// TODO: create trigger handler
-// TODO: after form submit the interdepedent questions do not work
-
 type QuestionnaireDialogProps = {
   onClose: () => void;
   isOpen: boolean;
   onFormSubmit: (values: FormikValues) => Promise<void>;
   formStatus: FormStatus;
-  // TODO: handle any
   api: any;
 };
-
-// TODO: this can be inside Context
 
 export default function QuestionnaireDialog({
   onClose,
@@ -34,7 +28,6 @@ export default function QuestionnaireDialog({
   formStatus,
   api
 }: QuestionnaireDialogProps) {
-  // TODO: dynamic generic type for the question
   const [questionnaireData, fetchQuestionnaireDataApi, apiDispatch] = useApi<
     QuestionWithAnswer[]
   >(
@@ -113,7 +106,6 @@ export default function QuestionnaireDialog({
         callback: (data) => {
           const setFormikValues = actions.setFormikValues;
 
-          // TODO: tidy up this logic
           setFormikValues(
             data.map((d) => ({
               value: formStatus === 'FILLED' ? d.value : d.isMulti ? [] : '',
@@ -130,9 +122,7 @@ export default function QuestionnaireDialog({
   const sortedQuestionnaireData = useMemo(() => {
     if (!questionnaireData.data) return [];
 
-    // TODO: it is not working
-    const order = _.orderBy(questionnaireData.data, ['order'], 'asc');
-    return order;
+    return _.orderBy(questionnaireData.data, ['order'], 'asc');
   }, [questionnaireData.data]);
 
   return (
