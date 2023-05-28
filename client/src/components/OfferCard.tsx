@@ -5,30 +5,50 @@ import {
   CardContent,
   Typography,
   CardActions,
-  Button
+  Button,
+  Stack,
+  IconButton
 } from '@mui/material';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { useNavigate } from 'react-router-dom';
 
-type OfferProps = Offer;
-
-const OfferCard = ({
-  productCategory,
-  price,
-  name,
-  opinionsCount
-}: OfferProps) => {
+const OfferCard = ({ amount, name, id, productCategory }: Offer) => {
+  const navigate = useNavigate();
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {name}
-        </Typography>
-        <Typography variant="h5" component="div"></Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          {price} $
-        </Typography>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="flex-start"
+        >
+          <Stack>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              {name}
+            </Typography>
+            <Typography variant="h5" component="div"></Typography>
+            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+              {amount} $
+            </Typography>
+          </Stack>
+          <IconButton>
+            <FavoriteBorderIcon color="primary" />
+          </IconButton>
+        </Stack>
       </CardContent>
       <CardActions>
-        <Button size="small">Buy now</Button>
+        <Button
+          size="small"
+          onClick={() => {
+            navigate(`/purchase/${id}`);
+          }}
+        >
+          Buy now
+        </Button>
       </CardActions>
     </Card>
   );

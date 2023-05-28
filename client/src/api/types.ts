@@ -39,10 +39,14 @@ export interface QuestionWithAnswer {
 }
 
 export interface Offer {
-  productCategory: ProductCategoryDefinition;
-  price: number;
+  productCategory: {
+    name: ProductCategoryDefinition;
+    id: number;
+  };
+  amount: number;
   name: string;
   opinionsCount: number;
+  id: number;
 }
 
 export interface Option {

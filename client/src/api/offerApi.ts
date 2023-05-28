@@ -1,10 +1,13 @@
+import axiosInstance from '.';
 import { HTTP_METHOD } from '../constants';
-import { ProductCategoryDefinition } from './types';
+import { FormTypeDefinition, ProductCategoryDefinition } from './types';
 
 const makeOfferApi = ({
-  productCategory
+  productCategory,
+  formType
 }: {
-  productCategory: ProductCategoryDefinition;
+  productCategory?: ProductCategoryDefinition;
+  formType?: FormTypeDefinition;
 }) => {
   const getOffersRequestConfig = () => ({
     url: `/offers`,
@@ -14,8 +17,22 @@ const makeOfferApi = ({
     }
   });
 
+  const getOfferRequestConfig = async ({ id }: { id: string }) => {
+    const requestConfig = {
+      url: `/offers/${id}`,
+      method: HTTP_METHOD.GET,
+      params: {
+        productCategory
+      }
+    };
+
+    const result = await axiosInstance(requestConfig);
+    return result.data;
+  };
+
   return {
-    getOffersRequestConfig
+    getOffersRequestConfig,
+    getOfferRequestConfig
   };
 };
 

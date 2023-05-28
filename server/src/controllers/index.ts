@@ -7,6 +7,8 @@ import makeGetFormData from './get-form-data';
 import makeGetOffers from './get-offers';
 import makePatchForm from './patch-form';
 import makeGetInterDependentQuestions from './get-inter-dependent-questions';
+import makeGetOffer from './get-offer';
+import makePostPurchase from './post-purchase';
 
 const getProductCategories = makeGetProductCategories({
   listProductCategories: useCases.listProductCategories
@@ -24,6 +26,8 @@ const patchForm = makePatchForm({ editForm: useCases.editForm });
 const getInterDependentQuestions = makeGetInterDependentQuestions({
   listInterDependentQuestions: useCases.listInterDependentQuestion
 });
+const getOffer = makeGetOffer({ showOffer: useCases.showOffer });
+const postPurchase = makePostPurchase({ addPurchase: useCases.addPurchase });
 
 export default {
   getProductCategories,
@@ -33,5 +37,7 @@ export default {
   getFormData,
   getOffers,
   patchForm,
-  getInterDependentQuestions
+  getInterDependentQuestions,
+  getOffer,
+  postPurchase
 };

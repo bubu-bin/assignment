@@ -7,6 +7,8 @@ import makeListFormData from './list-form-data';
 import makeListOffers from './list-offers';
 import makeEditForm from './edit-form';
 import makeListInterDependentQuestions from './list-inter-dependent-questions';
+import makeShowOffer from './show-offer';
+import makeAddPurchase from './add-purchase';
 
 const listProductCategories = makeListProductCategories({ repository });
 const showUser = makeShowUser({ repository });
@@ -18,6 +20,8 @@ const editForm = makeEditForm({ repository });
 const listInterDependentQuestion = makeListInterDependentQuestions({
   repository
 });
+const showOffer = makeShowOffer({ repository });
+const addPurchase = makeAddPurchase({ repository });
 
 export default {
   listProductCategories,
@@ -27,5 +31,7 @@ export default {
   listFormData,
   listOffers,
   editForm,
-  listInterDependentQuestion
+  listInterDependentQuestion,
+  showOffer,
+  addPurchase
 };

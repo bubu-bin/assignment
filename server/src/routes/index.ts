@@ -16,5 +16,7 @@ routes.get(
   '/inter_dependent_questions',
   controllers.getInterDependentQuestions
 );
+routes.get('/offers/:id', controllers.getOffer);
+routes.post('/purchase', controllers.postPurchase);
 
 export default routes;

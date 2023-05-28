@@ -22,7 +22,7 @@ const makeListOffers = ({ repository }: { repository: Repository }) => {
       }
     });
 
-    const products = await repository.productStore.findMany({
+    const offers = await repository.offerStore.findMany({
       where: {
         productCategory: { name: params.productCategory }
       },
@@ -30,8 +30,6 @@ const makeListOffers = ({ repository }: { repository: Repository }) => {
         productCategory: true
       }
     });
-    // TODO: check the form if exists
-    // TODO: throw error if does not exist
 
     // TODO: these filters should be applied to find specific offers
     const filters = form.formData.map((f) => ({
@@ -39,8 +37,8 @@ const makeListOffers = ({ repository }: { repository: Repository }) => {
       filterValue: f.answer
     }));
 
-    return products.filter(
-      (product) => product.productCategory.name === params.productCategory
+    return offers.filter(
+      (offer) => offer.productCategory.name === params.productCategory
     );
   };
 
