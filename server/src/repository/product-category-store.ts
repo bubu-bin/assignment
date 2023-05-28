@@ -1,19 +1,22 @@
 import { Store } from '../config/database';
 
 const makeProductCategoryStore = ({ database }: Store) => {
-  const find = async () => {
+  // TODO: handle any
+  const find = async ({ where }: { where: any }) => {
     try {
-      return await database.productCategory.findFirstOrThrow();
-    } catch (err) {
+      return await database.productCategory.findFirstOrThrow({ where });
+    } catch (err: any) {
       // TODO: handle err
+      throw new Error(err);
     }
   };
 
   const findMany = async () => {
     try {
       return await database.productCategory.findMany();
-    } catch (err) {
+    } catch (err: any) {
       // TODO: handle err
+      throw new Error(err);
     }
   };
 
