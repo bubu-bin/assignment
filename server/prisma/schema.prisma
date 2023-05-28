@@ -24,6 +24,7 @@ model ProductCategory {
   name      ProductCategoryDefinition
   questions Question[]
   form      Form[]
+  Product   Product[]
 
   @@map("product_categories")
 }
@@ -152,6 +153,19 @@ model FormType {
   Question Question[]
 
   @@map("form_types")
+}
+
+model Product {
+  id                Int             @id @default(autoincrement())
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id], onDelete: Restrict)
+  productCategoryId Int             @map("product_category_id")
+  name              String
+  amount            Float           @db.DoublePrecision
+  opinionsCount     Int             @map("opinions_count")
+
+  @@map("products")
 }
 
 enum FormTypeDefinition {

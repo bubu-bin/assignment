@@ -581,6 +581,152 @@ const seeds = {
       inputOutputTriggerFakeId: 7,
       fakeId: 7
     }
+  ],
+  products: [
+    {
+      productCategoryFakeId: 2,
+      amount: 123,
+      name: 'Insurance Company A',
+      opinionsCount: 4
+    },
+    {
+      productCategoryFakeId: 2,
+      amount: 456,
+      name: 'Insurance Company B',
+      opinionsCount: 7
+    },
+    {
+      productCategoryFakeId: 2,
+      amount: 789,
+      name: 'Insurance Company C',
+      opinionsCount: 2
+    },
+    {
+      productCategoryFakeId: 2,
+      amount: 321,
+      name: 'Insurance Company D',
+      opinionsCount: 6
+    },
+    {
+      productCategoryFakeId: 2,
+      amount: 654,
+      name: 'Insurance Company E',
+      opinionsCount: 3
+    },
+    {
+      productCategoryFakeId: 2,
+      amount: 987,
+      name: 'Insurance Company F',
+      opinionsCount: 9
+    },
+    {
+      productCategoryFakeId: 2,
+      amount: 135,
+      name: 'Insurance Company G',
+      opinionsCount: 5
+    },
+    {
+      productCategoryFakeId: 2,
+      amount: 246,
+      name: 'Insurance Company H',
+      opinionsCount: 8
+    },
+    {
+      productCategoryFakeId: 2,
+      amount: 579,
+      name: 'Insurance Company I',
+      opinionsCount: 1
+    },
+    {
+      productCategoryFakeId: 2,
+      amount: 753,
+      name: 'Insurance Company J',
+      opinionsCount: 10
+    },
+    {
+      productCategoryFakeId: 2,
+      amount: 864,
+      name: 'Insurance Company K',
+      opinionsCount: 12
+    },
+    {
+      productCategoryFakeId: 2,
+      amount: 147,
+      name: 'Insurance Company L',
+      opinionsCount: 11
+    },
+    {
+      productCategoryFakeId: 1,
+      amount: 123,
+      name: 'Ford',
+      opinionsCount: 4
+    },
+    {
+      productCategoryFakeId: 1,
+      amount: 456,
+      name: 'Toyota',
+      opinionsCount: 7
+    },
+    {
+      productCategoryFakeId: 1,
+      amount: 789,
+      name: 'Honda',
+      opinionsCount: 2
+    },
+    {
+      productCategoryFakeId: 1,
+      amount: 321,
+      name: 'Chevrolet',
+      opinionsCount: 6
+    },
+    {
+      productCategoryFakeId: 1,
+      amount: 654,
+      name: 'BMW',
+      opinionsCount: 3
+    },
+    {
+      productCategoryFakeId: 1,
+      amount: 987,
+      name: 'Mercedes-Benz',
+      opinionsCount: 9
+    },
+    {
+      productCategoryFakeId: 1,
+      amount: 135,
+      name: 'Audi',
+      opinionsCount: 5
+    },
+    {
+      productCategoryFakeId: 1,
+      amount: 246,
+      name: 'Tesla',
+      opinionsCount: 8
+    },
+    {
+      productCategoryFakeId: 1,
+      amount: 579,
+      name: 'Nissan',
+      opinionsCount: 1
+    },
+    {
+      productCategoryFakeId: 1,
+      amount: 753,
+      name: 'Volkswagen',
+      opinionsCount: 10
+    },
+    {
+      productCategoryFakeId: 1,
+      amount: 864,
+      name: 'Subaru',
+      opinionsCount: 12
+    },
+    {
+      productCategoryFakeId: 1,
+      amount: 147,
+      name: 'Mazda',
+      opinionsCount: 11
+    }
   ]
 };
 
@@ -731,6 +877,19 @@ async function main() {
         ...(await prisma.questionsOnInterDependentQuestions.create({ data })),
         fakeId: qoidq.fakeId
       };
+    })
+  );
+
+  const products = await Promise.all(
+    seeds.products.map(async (product) => {
+      const data = {
+        ..._.omit(product, ['productCategoryFakeId']),
+        productCategoryId: productCategories.find(
+          (p) => p.fakeId === product.productCategoryFakeId
+        )!.id
+      };
+
+      await prisma.product.create({ data });
     })
   );
 
