@@ -38,9 +38,40 @@ const makeOfferStore = ({ database }: Store) => {
     }
   };
 
+  const addFavouriteOffer = async ({ data }: { data: any }) => {
+    try {
+      return await database.userFavouriteOffers.create({ data });
+    } catch (err: any) {
+      // TODO: handle err
+      console.log(err);
+      throw new Error(err);
+    }
+  };
+
+  const findFavouritesOffers = async <
+    T extends Prisma.UserFavouriteOffersWhereInput | undefined,
+    K extends Prisma.UserFavouriteOffersInclude | undefined
+  >({
+    where,
+    include
+  }: {
+    where: T;
+    include: K;
+  }) => {
+    try {
+      return await database.userFavouriteOffers.findMany({ where, include });
+    } catch (err: any) {
+      // TODO: handle err
+      console.log(err);
+      throw new Error(err);
+    }
+  };
+
   return {
     findMany,
-    find
+    find,
+    addFavouriteOffer,
+    findFavouritesOffers
   };
 };
 

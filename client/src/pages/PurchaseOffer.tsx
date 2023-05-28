@@ -49,7 +49,16 @@ const PurchaseOffer = () => {
             <Typography>Product name: {offer?.name}</Typography>
             <Typography>Price: {offer?.amount} $</Typography>
           </Stack>
-          <Button variant="outlined">Add to favourite</Button>
+          <Button
+            variant="outlined"
+            onClick={async () => {
+              await makeOfferApi({}).addToFavourite({
+                data: { id: offer?.id }
+              });
+            }}
+          >
+            Add to favourite
+          </Button>
         </Stack>
         {questionRequestConfig && (
           <PurchaseForm

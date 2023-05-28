@@ -1,5 +1,5 @@
 import React from 'react';
-import { Offer } from '../api/types';
+import { Offer, ProductCategory, UserFavouriteOffers } from '../api/types';
 import {
   Card,
   CardContent,
@@ -10,10 +10,23 @@ import {
   IconButton
 } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from 'react-router-dom';
+import makeOfferApi from '../api/offerApi';
 
-const OfferCard = ({ amount, name, id, productCategory }: Offer) => {
+type OfferCardProps = Offer & { productCategory: ProductCategory } & {
+  userFavouriteOffers: UserFavouriteOffers[];
+} & { fetchOffers: () => void };
+
+const OfferCard = ({
+  amount,
+  name,
+  id,
+  userFavouriteOffers,
+  fetchOffers
+}: OfferCardProps) => {
   const navigate = useNavigate();
+
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
@@ -35,8 +48,19 @@ const OfferCard = ({ amount, name, id, productCategory }: Offer) => {
               {amount} $
             </Typography>
           </Stack>
-          <IconButton>
-            <FavoriteBorderIcon color="primary" />
+          <IconButton
+            onClick={async () => {
+              await makeOfferApi({}).addToFavourite({
+                data: { id }
+              });
+              fetchOffers();
+            }}
+          >
+            {userFavouriteOffers.length > 0 ? (
+              <FavoriteIcon color="primary" />
+            ) : (
+              <FavoriteBorderIcon color="primary" />
+            )}
           </IconButton>
         </Stack>
       </CardContent>

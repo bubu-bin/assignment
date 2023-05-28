@@ -9,6 +9,8 @@ import makePatchForm from './patch-form';
 import makeGetInterDependentQuestions from './get-inter-dependent-questions';
 import makeGetOffer from './get-offer';
 import makePostPurchase from './post-purchase';
+import makePostFavouriteOffer from './post-favourite-offer';
+import makeGetUserFavourites from './get-user-favourites';
 
 const getProductCategories = makeGetProductCategories({
   listProductCategories: useCases.listProductCategories
@@ -28,6 +30,12 @@ const getInterDependentQuestions = makeGetInterDependentQuestions({
 });
 const getOffer = makeGetOffer({ showOffer: useCases.showOffer });
 const postPurchase = makePostPurchase({ addPurchase: useCases.addPurchase });
+const postFavouriteOffer = makePostFavouriteOffer({
+  addFavouriteOffer: useCases.addFavouriteOffer
+});
+const getUserFavourites = makeGetUserFavourites({
+  listUserFavourites: useCases.listUserFavourites
+});
 
 export default {
   getProductCategories,
@@ -39,5 +47,7 @@ export default {
   patchForm,
   getInterDependentQuestions,
   getOffer,
-  postPurchase
+  postPurchase,
+  postFavouriteOffer,
+  getUserFavourites
 };

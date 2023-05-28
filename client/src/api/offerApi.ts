@@ -30,9 +30,27 @@ const makeOfferApi = ({
     return result.data;
   };
 
+  const addToFavourite = async ({ data }: { data: any }) => {
+    const requestConfig = {
+      url: `/offers/favourite`,
+      method: HTTP_METHOD.POST,
+      data
+    };
+
+    const result = await axiosInstance(requestConfig);
+    return result.data;
+  };
+
+  const getUserFavourites = () => ({
+    url: `/favourites`,
+    method: HTTP_METHOD.GET
+  });
+
   return {
     getOffersRequestConfig,
-    getOfferRequestConfig
+    getOfferRequestConfig,
+    addToFavourite,
+    getUserFavourites
   };
 };
 

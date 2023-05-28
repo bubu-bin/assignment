@@ -9,6 +9,8 @@ import makeEditForm from './edit-form';
 import makeListInterDependentQuestions from './list-inter-dependent-questions';
 import makeShowOffer from './show-offer';
 import makeAddPurchase from './add-purchase';
+import makeAddFavouriteOffer from './add-favourite-offer';
+import makeListUserFavourites from './list-user-favourites';
 
 const listProductCategories = makeListProductCategories({ repository });
 const showUser = makeShowUser({ repository });
@@ -22,6 +24,8 @@ const listInterDependentQuestion = makeListInterDependentQuestions({
 });
 const showOffer = makeShowOffer({ repository });
 const addPurchase = makeAddPurchase({ repository });
+const addFavouriteOffer = makeAddFavouriteOffer({ repository });
+const listUserFavourites = makeListUserFavourites({ repository });
 
 export default {
   listProductCategories,
@@ -33,5 +37,7 @@ export default {
   editForm,
   listInterDependentQuestion,
   showOffer,
-  addPurchase
+  addPurchase,
+  addFavouriteOffer,
+  listUserFavourites
 };

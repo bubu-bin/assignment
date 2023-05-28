@@ -9,7 +9,7 @@ const errorHandler = (
   next: NextFunction
 ) => {
   // TODO: provide more meaningful way of serving the errors
-  return res.status(500).send(`Internal server error`);
+  return res.status(500).send(err.message);
 };
 
 export { errorHandler };

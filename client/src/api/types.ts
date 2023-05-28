@@ -38,15 +38,20 @@ export interface QuestionWithAnswer {
   interDependentQuestionsId: number[];
 }
 
+export interface UserFavouriteOffers {
+  id: number;
+  userId: number;
+  offerId: number;
+}
+
 export interface Offer {
-  productCategory: {
-    name: ProductCategoryDefinition;
-    id: number;
-  };
+  productCategoryId: number;
   amount: number;
   name: string;
   opinionsCount: number;
   id: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Option {
@@ -54,6 +59,7 @@ export interface Option {
   id: number;
   questionId: number;
 }
+
 export interface ProductCategory {
   name: ProductCategoryDefinition;
   id: number;

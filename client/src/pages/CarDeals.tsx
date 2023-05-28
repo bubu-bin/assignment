@@ -4,7 +4,9 @@ import { useApi, useBoolean } from '../hooks';
 import {
   ProductCategoryDefinition,
   FormTypeDefinition,
-  Offer
+  Offer,
+  ProductCategory,
+  UserFavouriteOffers
 } from '../api/types';
 
 import { Button, Grid, Stack, Typography } from '@mui/material';
@@ -32,7 +34,13 @@ const api = {
 const CarDeals = () => {
   const isDialogOpen = useBoolean(false);
   const [formStatus, setFormStatus] = useState<FormStatus>('FILLED');
-  const [offers, fetchOffersApi] = useApi<Offer[]>(
+  const [offers, fetchOffersApi] = useApi<
+    Array<
+      Offer & { productCategory: ProductCategory } & {
+        userFavouriteOffers: UserFavouriteOffers[];
+      }
+    >
+  >(
     useMemo(
       () => ({
         throwError: true,
@@ -85,7 +93,7 @@ const CarDeals = () => {
       <Grid container gap={2} justifyContent={'space-between'}>
         {offers.data?.map((offer, id) => (
           <Grid item key={id}>
-            <OfferCard {...offer} />
+            <OfferCard {...offer} fetchOffers={fetchOffers} />
           </Grid>
         ))}
       </Grid>

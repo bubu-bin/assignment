@@ -13,10 +13,8 @@ import { FormStatus, FormikValues } from '../types';
 import _ from 'lodash';
 import { MultiHandler } from '../handlers/MultiHandler';
 
-// TOP_TODO: create trigger handler
-// TOP_TODO: after saving the questions appear with all the data
-
-// TODO:  must add the products so they can be later added to favourite
+// TODO: create trigger handler
+// TODO: after form submit the interdepedent questions do not work
 
 type QuestionnaireDialogProps = {
   onClose: () => void;

@@ -18,5 +18,7 @@ routes.get(
 );
 routes.get('/offers/:id', controllers.getOffer);
 routes.post('/purchase', controllers.postPurchase);
+routes.get('/favourites', controllers.getUserFavourites);
+routes.post('/offers/favourite', controllers.postFavouriteOffer);
 
 export default routes;

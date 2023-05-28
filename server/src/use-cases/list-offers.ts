@@ -27,7 +27,8 @@ const makeListOffers = ({ repository }: { repository: Repository }) => {
         productCategory: { name: params.productCategory }
       },
       include: {
-        productCategory: true
+        productCategory: true,
+        userFavouriteOffers: true
       }
     });
 

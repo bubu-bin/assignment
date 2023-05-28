@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  password  String
-  email     String     @unique
-  name      String
-  surname   String
-  createdAt DateTime   @default(now()) @map("created_at")
-  form      Form[]
-  Purchase  Purchase[]
+  id                  Int                   @id @default(autoincrement())
+  password            String
+  email               String                @unique
+  name                String
+  surname             String
+  createdAt           DateTime              @default(now()) @map("created_at")
+  form                Form[]
+  purchase            Purchase[]
+  userFavouriteOffers UserFavouriteOffers[]
 
   @@map("users")
 }
@@ -168,14 +169,15 @@ model Purchase {
 }
 
 model Offer {
-  id                Int             @id @default(autoincrement())
-  createdAt         DateTime        @default(now()) @map("created_at")
-  updatedAt         DateTime        @updatedAt @map("updated_at")
-  productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id], onDelete: Restrict)
-  productCategoryId Int             @map("product_category_id")
-  name              String
-  amount            Float           @db.DoublePrecision
-  opinionsCount     Int             @map("opinions_count")
+  id                  Int                   @id @default(autoincrement())
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @updatedAt @map("updated_at")
+  productCategory     ProductCategory       @relation(fields: [productCategoryId], references: [id], onDelete: Restrict)
+  productCategoryId   Int                   @map("product_category_id")
+  name                String
+  amount              Float                 @db.DoublePrecision
+  opinionsCount       Int                   @map("opinions_count")
+  userFavouriteOffers UserFavouriteOffers[]
 
   @@map("products")
 }
@@ -183,4 +185,14 @@ model Offer {
 enum FormTypeDefinition {
   SEARCH
   PURCHASE
+}
+
+model UserFavouriteOffers {
+  id      Int   @id @default(autoincrement())
+  userId  Int   @map("user_id")
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  offerId Int   @map("offer_id")
+  offer   Offer @relation(fields: [offerId], references: [id], onDelete: Cascade)
+
+  @@map("user_favourite_offers")
 }
