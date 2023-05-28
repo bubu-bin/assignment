@@ -12,7 +12,7 @@ import { UserFavourites } from '../components';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 function TopBar() {
-  const [isUserFavouritesOpen, setIsUserFavouritesOpen] = React.useState(true);
+  const [isUserFavouritesOpen, setIsUserFavouritesOpen] = React.useState(false);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
