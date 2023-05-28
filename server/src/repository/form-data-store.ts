@@ -1,5 +1,9 @@
 import { FormData, Prisma } from '@prisma/client';
 import { Store } from '../config/database';
+import { getErrorMessage } from '../tools';
+import { ServerErrorDefinition } from '../types';
+import { ApplicationError } from '../handlers/ApplicationError';
+import { HttpStatusCode } from 'axios';
 
 const makeFormDataStore = ({ database }: Store) => {
   const find = async <
@@ -14,9 +18,14 @@ const makeFormDataStore = ({ database }: Store) => {
   }) => {
     try {
       return await database.formData.findFirst({ where, include });
-    } catch (err: any) {
-      // TODO: handle err
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.BadRequest,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 
@@ -32,9 +41,14 @@ const makeFormDataStore = ({ database }: Store) => {
   }) => {
     try {
       return await database.formData.findMany({ where, include });
-    } catch (err: any) {
-      // TODO: handle err
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.BadRequest,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 
@@ -50,9 +64,14 @@ const makeFormDataStore = ({ database }: Store) => {
   }) => {
     try {
       return await database.formData.update({ where, data });
-    } catch (err: any) {
-      // TODO: handle err
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.BadRequest,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 
@@ -69,9 +88,14 @@ const makeFormDataStore = ({ database }: Store) => {
   }) => {
     try {
       return await database.formData.create({ data });
-    } catch (err: any) {
-      // TODO: handle err
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.BadRequest,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 

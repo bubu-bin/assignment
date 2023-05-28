@@ -1,5 +1,9 @@
 import { Prisma } from '@prisma/client';
 import { Store } from '../config/database';
+import { getErrorMessage } from '../tools';
+import { ServerErrorDefinition } from '../types';
+import { HttpStatusCode } from 'axios';
+import { ApplicationError } from '../handlers/ApplicationError';
 
 const makeQuestionStore = ({ database }: Store) => {
   const find = async <T extends Prisma.QuestionWhereInput>({
@@ -9,9 +13,14 @@ const makeQuestionStore = ({ database }: Store) => {
   }) => {
     try {
       return await database.question.findFirstOrThrow({ where });
-    } catch (err: any) {
-      // TODO: handle err
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.NotFound,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 
@@ -30,9 +39,14 @@ const makeQuestionStore = ({ database }: Store) => {
         include,
         where
       });
-    } catch (err: any) {
-      // TODO: handle err
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.BadRequest,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 
@@ -65,9 +79,14 @@ const makeQuestionStore = ({ database }: Store) => {
           }
         }
       });
-    } catch (err: any) {
-      // TODO: handle err
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.BadRequest,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 

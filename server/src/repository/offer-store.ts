@@ -1,5 +1,9 @@
 import { Prisma } from '@prisma/client';
 import { Store } from '../config/database';
+import { ServerErrorDefinition } from '../types';
+import { getErrorMessage } from '../tools';
+import { HttpStatusCode } from 'axios';
+import { ApplicationError } from '../handlers/ApplicationError';
 
 const makeOfferStore = ({ database }: Store) => {
   const findMany = async <
@@ -14,9 +18,14 @@ const makeOfferStore = ({ database }: Store) => {
   }) => {
     try {
       return await database.offer.findMany({ where, include });
-    } catch (err: any) {
-      // TODO: handle err
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.BadRequest,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 
@@ -32,19 +41,28 @@ const makeOfferStore = ({ database }: Store) => {
   }) => {
     try {
       return await database.offer.findUniqueOrThrow({ where, include });
-    } catch (err: any) {
-      // TODO: handle err
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.NotFound,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 
   const addFavouriteOffer = async ({ data }: { data: any }) => {
     try {
       return await database.userFavouriteOffers.create({ data });
-    } catch (err: any) {
-      // TODO: handle err
-      console.log(err);
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.BadRequest,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 
@@ -60,10 +78,14 @@ const makeOfferStore = ({ database }: Store) => {
   }) => {
     try {
       return await database.userFavouriteOffers.findMany({ where, include });
-    } catch (err: any) {
-      // TODO: handle err
-      console.log(err);
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.BadRequest,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 

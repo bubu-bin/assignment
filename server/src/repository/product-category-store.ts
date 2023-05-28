@@ -1,22 +1,35 @@
+import { HttpStatusCode } from 'axios';
 import { Store } from '../config/database';
+import { ApplicationError } from '../handlers/ApplicationError';
+import { getErrorMessage } from '../tools';
+import { ServerErrorDefinition } from '../types';
 
 const makeProductCategoryStore = ({ database }: Store) => {
-  // TODO: handle any
   const find = async ({ where }: { where: any }) => {
     try {
       return await database.productCategory.findFirstOrThrow({ where });
-    } catch (err: any) {
-      // TODO: handle err
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.NotFound,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 
   const findMany = async () => {
     try {
       return await database.productCategory.findMany();
-    } catch (err: any) {
-      // TODO: handle err
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.BadRequest,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 

@@ -5,7 +5,6 @@ import { errorHandler } from './middlewares/error-handler';
 
 dotenv.config();
 
-// TODO: maybe in some env
 export const USER_ID = 1;
 
 const app = express();

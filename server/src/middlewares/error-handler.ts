@@ -1,14 +1,16 @@
-/* eslint-disable unused-imports/no-unused-vars */
 import { Request, Response, NextFunction } from 'express';
+import { ApplicationError } from '../handlers/ApplicationError';
 
 const errorHandler = (
   err: Error,
   req: Request,
   res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
-  // TODO: provide more meaningful way of serving the errors
+  if (err instanceof ApplicationError) {
+    return res.status(err.statusCode).send(err.message);
+  }
+
   return res.status(500).send(err.message);
 };
 
