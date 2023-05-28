@@ -8,13 +8,14 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   password  String
-  email     String   @unique
+  email     String     @unique
   name      String
   surname   String
-  createdAt DateTime @default(now()) @map("created_at")
+  createdAt DateTime   @default(now()) @map("created_at")
   form      Form[]
+  Purchase  Purchase[]
 
   @@map("users")
 }
@@ -24,7 +25,7 @@ model ProductCategory {
   name      ProductCategoryDefinition
   questions Question[]
   form      Form[]
-  Product   Product[]
+  Offer     Offer[]
 
   @@map("product_categories")
 }
@@ -155,7 +156,18 @@ model FormType {
   @@map("form_types")
 }
 
-model Product {
+model Purchase {
+  id        Int      @id @default(autoincrement())
+  data      Json
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("purchases")
+}
+
+model Offer {
   id                Int             @id @default(autoincrement())
   createdAt         DateTime        @default(now()) @map("created_at")
   updatedAt         DateTime        @updatedAt @map("updated_at")

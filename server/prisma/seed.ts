@@ -310,6 +310,136 @@ const seeds = {
       formTypeFakeId: 2,
       textFieldType: null,
       isMulti: false
+    },
+    {
+      isInterDependent: false,
+      order: '1',
+      prompt: 'Full name',
+      productCategoryFakeId: 1,
+      questionTypeFakeId: 2,
+      inputTypeFakeId: 3,
+      fakeId: 23,
+      name: 'fullName',
+      formTypeFakeId: 1,
+      textFieldType: 'text',
+      isMulti: null
+    },
+    {
+      isInterDependent: false,
+      order: '1',
+      prompt: 'Full name',
+      productCategoryFakeId: 2,
+      questionTypeFakeId: 2,
+      inputTypeFakeId: 3,
+      fakeId: 24,
+      name: 'fullName',
+      formTypeFakeId: 1,
+      textFieldType: 'text',
+      isMulti: null
+    },
+    {
+      isInterDependent: false,
+      order: '2',
+      prompt: 'Email address',
+      productCategoryFakeId: 1,
+      questionTypeFakeId: 2,
+      inputTypeFakeId: 3,
+      fakeId: 25,
+      name: 'emailAddress',
+      formTypeFakeId: 1,
+      textFieldType: 'text',
+      isMulti: null
+    },
+    {
+      isInterDependent: false,
+      order: '2',
+      prompt: 'Email address',
+      productCategoryFakeId: 2,
+      questionTypeFakeId: 2,
+      inputTypeFakeId: 3,
+      fakeId: 26,
+      name: 'emailAddress',
+      formTypeFakeId: 1,
+      textFieldType: 'text',
+      isMulti: null
+    },
+    {
+      isInterDependent: false,
+      order: '3',
+      prompt: 'Phone number',
+      productCategoryFakeId: 1,
+      questionTypeFakeId: 2,
+      inputTypeFakeId: 3,
+      fakeId: 27,
+      name: 'phoneNumber',
+      formTypeFakeId: 1,
+      textFieldType: 'text',
+      isMulti: null
+    },
+    {
+      isInterDependent: false,
+      order: '3',
+      prompt: 'Phone number',
+      productCategoryFakeId: 2,
+      questionTypeFakeId: 2,
+      inputTypeFakeId: 3,
+      fakeId: 28,
+      name: 'phoneNumber',
+      formTypeFakeId: 1,
+      textFieldType: 'text',
+      isMulti: null
+    },
+    {
+      isInterDependent: false,
+      order: '4',
+      prompt: 'Home Address',
+      productCategoryFakeId: 1,
+      questionTypeFakeId: 2,
+      inputTypeFakeId: 3,
+      fakeId: 28,
+      name: 'homeAddress',
+      formTypeFakeId: 1,
+      textFieldType: 'text',
+      isMulti: null
+    },
+    {
+      isInterDependent: false,
+      order: '4',
+      prompt: 'Home Address',
+      productCategoryFakeId: 2,
+      questionTypeFakeId: 2,
+      inputTypeFakeId: 3,
+      fakeId: 29,
+      name: 'homeAddress',
+      formTypeFakeId: 1,
+      textFieldType: 'text',
+      isMulti: null
+    },
+    {
+      isInterDependent: false,
+      order: '5',
+      prompt: 'Car color',
+      productCategoryFakeId: 1,
+      questionTypeFakeId: 3,
+      inputTypeFakeId: 2,
+      fakeId: 30,
+      name: 'carColor',
+      formTypeFakeId: 1,
+      textFieldType: null,
+      isMulti: null
+    },
+    {
+      isInterDependent: false,
+      order: '5',
+      prompt: 'Insurance type',
+      productCategoryFakeId: 2,
+      questionTypeFakeId: 3,
+      inputTypeFakeId: 2,
+      fakeId: 31,
+      name: 'insuranceType',
+      formTypeFakeId: 1,
+      textFieldType: null,
+      isMulti: null
     }
   ],
   options: [
@@ -492,6 +622,31 @@ const seeds = {
       value: 'City',
       questionFakeId: 19,
       fakeId: 35
+    },
+    {
+      value: 'Red',
+      questionFakeId: 30,
+      fakeId: 36
+    },
+    {
+      value: 'Blue',
+      questionFakeId: 30,
+      fakeId: 37
+    },
+    {
+      value: 'Black',
+      questionFakeId: 30,
+      fakeId: 38
+    },
+    {
+      value: 'OC',
+      questionFakeId: 31,
+      fakeId: 39
+    },
+    {
+      value: 'AC',
+      questionFakeId: 31,
+      fakeId: 40
     }
   ],
   inputOutputTriggers: [
@@ -582,7 +737,7 @@ const seeds = {
       fakeId: 7
     }
   ],
-  products: [
+  offers: [
     {
       productCategoryFakeId: 2,
       amount: 123,
@@ -880,8 +1035,8 @@ async function main() {
     })
   );
 
-  const products = await Promise.all(
-    seeds.products.map(async (product) => {
+  const offers = await Promise.all(
+    seeds.offers.map(async (product) => {
       const data = {
         ..._.omit(product, ['productCategoryFakeId']),
         productCategoryId: productCategories.find(
@@ -889,7 +1044,7 @@ async function main() {
         )!.id
       };
 
-      await prisma.product.create({ data });
+      await prisma.offer.create({ data });
     })
   );
 
