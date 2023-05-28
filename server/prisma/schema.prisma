@@ -41,6 +41,10 @@ model Question {
   options                      Option[]
   createdAt                    DateTime                             @default(now()) @map("created_at")
   updatedAt                    DateTime                             @updatedAt @map("updated_at")
+  name                         String
+  placeholder                  String?
+  isMulti                      Boolean?                             @map("is_multi")
+  textFieldType                String?                              @map("text_field_type")
   productCategory              ProductCategory                      @relation(fields: [productCategoryId], references: [id], onDelete: Restrict)
   productCategoryId            Int                                  @map("product_category_id")
   questionType                 QuestionType                         @relation(fields: [questionTypeId], references: [id], onDelete: Restrict)
@@ -50,6 +54,8 @@ model Question {
   selfReferenceLeadingQuestion QuestionsOnInterDependentQuestions[] @relation("LeadingQuestion")
   interDependentQuestions      QuestionsOnInterDependentQuestions[] @relation("InterDependentQuestion")
   formData                     FormData[]
+  formType                     FormType                             @relation(fields: [formTypeId], references: [id])
+  formTypeId                   Int                                  @map("form_type_id")
 
   @@map("questions")
 }
@@ -121,8 +127,10 @@ model Form {
   formData          FormData[]
   productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id], onDelete: Restrict)
   productCategoryId Int             @map("product_category_id")
+  formType          FormType        @relation(fields: [formTypeId], references: [id])
+  formTypeId        Int             @map("form_type_id")
 
-  @@unique([productCategoryId, userId])
+  @@unique([productCategoryId, userId, formTypeId])
   @@map("forms")
 }
 
@@ -135,4 +143,18 @@ model FormData {
   question   Question @relation(fields: [questionId], references: [id], onDelete: Restrict)
 
   @@map("form_data")
+}
+
+model FormType {
+  id       Int                @id @default(autoincrement())
+  name     FormTypeDefinition
+  Form     Form[]
+  Question Question[]
+
+  @@map("form_types")
+}
+
+enum FormTypeDefinition {
+  SEARCH
+  PURCHASE
 }
