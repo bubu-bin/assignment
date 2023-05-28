@@ -5,11 +5,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { DRAWER_WIDTH, PAGES } from '../constants';
 
 export default function SideBar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <Drawer
@@ -30,7 +31,10 @@ export default function SideBar() {
       <List>
         {PAGES.map((page, index) => (
           <ListItem key={index} disablePadding>
-            <ListItemButton onClick={() => navigate(page.url)}>
+            <ListItemButton
+              onClick={() => navigate(page.url)}
+              selected={location.pathname === page.url}
+            >
               <ListItemIcon>{page.icon}</ListItemIcon>
               <ListItemText primary={page.label} />
             </ListItemButton>
