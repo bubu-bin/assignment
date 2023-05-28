@@ -1,13 +1,21 @@
+import { HttpStatusCode } from 'axios';
 import { Store } from '../config/database';
+import { ApplicationError } from '../handlers/ApplicationError';
+import { getErrorMessage } from '../tools';
+import { ServerErrorDefinition } from '../types';
 
 const makePurchaseStore = ({ database }: Store) => {
-  // TODO: handle any
   const create = async ({ data }: { data: any }) => {
     try {
       return await database.purchase.create({ data });
-    } catch (err: any) {
-      // TODO: handle err
-      throw new Error(err);
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.BadRequest,
+        type: ServerErrorDefinition.DATABASE
+      });
     }
   };
 
