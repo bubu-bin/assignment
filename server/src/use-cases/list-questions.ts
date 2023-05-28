@@ -1,8 +1,39 @@
+import { GetQuestionsRequestParams } from '../controllers/get-questions';
 import { Repository } from '../repository';
 
 const makeListQuestions = ({ repository }: { repository: Repository }) => {
-  const execute = async () => {
-    const questions = await repository.questionStore.findMany();
+  const execute = async (params: GetQuestionsRequestParams) => {
+    let questions = await repository.questionStore.findMany({
+      include: {
+        inputType: true,
+        options: true,
+        questionType: true
+      },
+      where: {
+        formType: {
+          name: params.formType
+        },
+        productCategory: {
+          name: params.productCategory
+        }
+      }
+    });
+
+    questions = await Promise.all(
+      questions.map(async (question) => {
+        const interDependentQuestions =
+          await repository.questionStore.findInterDependentQuestions({
+            leadingQuestionId: question.id
+          });
+
+        return {
+          ...question,
+          interDependentQuestionsId: interDependentQuestions.map(
+            (i) => i.interDependentQuestionId
+          )
+        };
+      })
+    );
 
     return questions;
   };
