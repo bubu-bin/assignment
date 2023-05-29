@@ -1,10 +1,18 @@
 ## Table of contents
 * [General info](#general-info)
+* [Documentation](#documentation)
 * [Technologies](#technologies)
 * [Setup](#setup)
 
 ## General info
 With this app you can purchase and search for items with dynamically created forms
+
+## Documentation
+Docs:
+https://docs.google.com/document/d/1BEhoMoKY90WYqiLavo8R7hQ3y7xWcZprm1sWyetnZ1U/edit
+
+Schema:
+https://excalidraw.com/#json=5T0EtcixvQZjrv4ODecES,or3iFJeo2-ZH6laPdnu9Iw
 	
 ## Technologies
 Project is created with:
