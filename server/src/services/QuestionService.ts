@@ -48,7 +48,7 @@ export default class QuestionService {
     }
   };
 
-  static getOutput = async ({
+  static getLeadingQuestionWithAnswer = async ({
     repository,
     interDependentQuestionId,
     formId
@@ -82,30 +82,42 @@ export default class QuestionService {
       })
     )?.answer;
 
-    if (leadingQuestion.isMulti) {
-      return questionOnInterDependentQuestions
-        .filter((interDependentQuestion) => {
-          const { leadingQuestion, inputOutputTrigger } =
-            interDependentQuestion;
+    return { ...leadingQuestion, value: leadingQuestionAnswer };
+  };
 
-          if (!inputOutputTrigger) return false;
+  static getPassedMultiOptions = async ({
+    repository,
+    interDependentQuestionId,
+    leadingQuestionAnswer
+  }: {
+    repository: Repository;
+    interDependentQuestionId: number;
+    leadingQuestionAnswer: any;
+  }) => {
+    const questionOnInterDependentQuestions =
+      await repository.questionStore.findInterDependentQuestions({
+        where: {
+          interDependentQuestionId
+        }
+      });
 
-          return QuestionService.checkCondition({
-            answer: leadingQuestionAnswer,
-            questionType: leadingQuestion.questionType.name,
-            conditionToFulfill: JSON.parse(
-              inputOutputTrigger.inputWhen as string
-            )
-          });
-        })
-        .map((interDependentQuestion) => {
-          return JSON.parse(
-            interDependentQuestion.inputOutputTrigger?.outputWith as any
-          );
-        })
-        .flatMap((i) => i);
-    }
+    return questionOnInterDependentQuestions
+      .filter((interDependentQuestion) => {
+        const { leadingQuestion, inputOutputTrigger } = interDependentQuestion;
 
-    return [];
+        if (!inputOutputTrigger) return false;
+
+        return QuestionService.checkCondition({
+          answer: leadingQuestionAnswer,
+          questionType: leadingQuestion.questionType.name,
+          conditionToFulfill: JSON.parse(inputOutputTrigger.inputWhen as string)
+        });
+      })
+      .map((interDependentQuestion) => {
+        return JSON.parse(
+          interDependentQuestion.inputOutputTrigger?.outputWith as string
+        );
+      })
+      .flatMap((i) => i);
   };
 }

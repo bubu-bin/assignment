@@ -19,7 +19,7 @@ const makeListFormData = ({ repository }: { repository: Repository }) => {
       include: undefined
     });
 
-    let formData = await repository.formDataStore.findMany({
+    const formData = await repository.formDataStore.findMany({
       where: {
         formId: form.id
       },
@@ -35,39 +35,63 @@ const makeListFormData = ({ repository }: { repository: Repository }) => {
       }
     });
 
-    return await Promise.all(
-      formData.map(async (f) => {
-        const { question } = f;
+    const formDataWithInterDependentQuestions = await Promise.all(
+      formData.map(async (formData) => {
+        const { question } = formData;
 
         const interDependentQuestions =
           await repository.questionStore.findInterDependentQuestions({
             where: {
-              leadingQuestionId: f.question.id
+              leadingQuestionId: question.id
             }
           });
 
-        let options = f.question.options;
+        return {
+          ...formData,
+          question: {
+            ...question,
+            interDependentQuestions
+          }
+        };
+      })
+    );
+
+    // TODO: Refactor this logic to many nesting
+    return await Promise.all(
+      formDataWithInterDependentQuestions.map(async (formData) => {
+        const { question } = formData;
+
+        let options = question.options;
 
         if (
           question.isInterDependent &&
           question.questionType.name === QuestionTypeDefinition.OPTION
         ) {
-          // TODO: Refactor getOutput method
-          const output = await QuestionService.getOutput({
-            repository,
-            formId: form.id,
-            interDependentQuestionId: question.id
-          });
+          const leadingQuestionWithAnswer =
+            await QuestionService.getLeadingQuestionWithAnswer({
+              repository,
+              formId: form.id,
+              interDependentQuestionId: question.id
+            });
 
-          options = options.filter((option) => output.includes(option.id));
+          if (leadingQuestionWithAnswer.isMulti) {
+            const passedOptions = await QuestionService.getPassedMultiOptions({
+              repository,
+              interDependentQuestionId: question.id,
+              leadingQuestionAnswer: leadingQuestionWithAnswer.value
+            });
+
+            options = options.filter((option) =>
+              passedOptions.includes(option.id)
+            );
+          }
         }
 
         return {
-          ...f,
+          ...formData,
           question: {
-            ...f.question,
-            options,
-            interDependentQuestions
+            ...question,
+            options
           }
         };
       })

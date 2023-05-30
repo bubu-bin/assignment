@@ -49,7 +49,8 @@ const makeGetInterDependentQuestions = ({
             interDependentQuestion.interDependentQuestions.map(
               (interDependentQuestion) => interDependentQuestion.id
             ),
-          order: Number(interDependentQuestion.order)
+          order: Number(interDependentQuestion.order),
+          questionType: interDependentQuestion.questionType.name
         };
       });
 
