@@ -16,34 +16,36 @@ const makeListInterDependentQuestions = ({
 
     let answer = JSON.parse(query.value);
 
-    const passed = interDependentQuestions.filter((interDependentQuestion) => {
-      const { leadingQuestion, inputOutputTrigger } = interDependentQuestion;
+    const passedInterDependentQuestions = interDependentQuestions.filter(
+      (interDependentQuestion) => {
+        const { leadingQuestion, inputOutputTrigger } = interDependentQuestion;
 
-      if (!inputOutputTrigger) return false;
+        if (!inputOutputTrigger) return false;
 
-      const inputWhen = JSON.parse(inputOutputTrigger!.inputWhen as string);
+        const inputWhen = JSON.parse(inputOutputTrigger!.inputWhen as string);
 
-      const checkWhenCondition = (questionType: QuestionTypeDefinition) => {
-        switch (questionType) {
-          case 'OPTION':
-            if (!Array.isArray(answer)) {
-              answer = [answer];
-            }
-            return answer.some((a: string) =>
-              inputWhen.map(String).includes(String(a))
-            );
-          case 'BOOLEAN':
-            return String(answer) === String(inputWhen);
-          case 'INPUT':
-            if (inputWhen === '*') return true;
-            return String(answer) === String(inputWhen);
-        }
-      };
+        const checkWhenCondition = (questionType: QuestionTypeDefinition) => {
+          switch (questionType) {
+            case 'OPTION':
+              if (!Array.isArray(answer)) {
+                answer = [answer];
+              }
+              return answer.some((a: string) =>
+                inputWhen.map(String).includes(String(a))
+              );
+            case 'BOOLEAN':
+              return String(answer) === String(inputWhen);
+            case 'INPUT':
+              if (inputWhen === '*') return true;
+              return String(answer) === String(inputWhen);
+          }
+        };
 
-      return checkWhenCondition(leadingQuestion.questionType.name);
-    });
+        return checkWhenCondition(leadingQuestion.questionType.name);
+      }
+    );
 
-    const result = passed.map((p) => {
+    return passedInterDependentQuestions.map((p) => {
       const { interDependentQuestion, inputOutputTrigger } = p;
 
       const outputWith = JSON.parse(inputOutputTrigger!.outputWith as string);
@@ -87,29 +89,6 @@ const makeListInterDependentQuestions = ({
           )
       };
     });
-
-    const groupedQuestions = _.groupBy(result, 'id');
-
-    const mergedQuestions = Object.values(groupedQuestions).map((questions) => {
-      const mergedOptions = questions.reduce(
-        (options: Omit<Option, 'questionId'>[], question) => {
-          if (question.options) {
-            options = [...options, ...question.options];
-          }
-          return options;
-        },
-        []
-      );
-
-      const mergedQuestion = {
-        ...questions[0],
-        options: mergedOptions
-      };
-
-      return mergedQuestion;
-    });
-
-    return mergedQuestions;
   };
 
   return { execute };

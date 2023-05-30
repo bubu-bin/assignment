@@ -1,4 +1,5 @@
-import { Question, QuestionWithAnswer } from '../api/types';
+import _ from 'lodash';
+import { Question, QuestionWithAnswer, Option } from '../api/types';
 
 export class MultiHandler {
   private questions: QuestionWithAnswer[];
@@ -52,10 +53,35 @@ export class MultiHandler {
     ];
   }
 
+  private mergeInterDependentQuestions() {
+    const groupedQuestions = _.groupBy(this.interDependentQuestions, 'id');
+
+    this.interDependentQuestions = Object.values(groupedQuestions).map(
+      (questions) => {
+        const mergedOptions = questions.reduce(
+          (options: Omit<Option, 'questionId'>[], question) => {
+            if (question.options) {
+              options = [...options, ...question.options];
+            }
+            return options;
+          },
+          []
+        );
+        const mergedQuestion = {
+          ...questions[0],
+          options: mergedOptions
+        };
+        return mergedQuestion;
+      }
+    );
+  }
+
   getPayload(): QuestionWithAnswer[] {
     if (this.newQuestionsAreEmpty()) {
       return this.removeInterDependentQuestionFromQuestions();
     }
+
+    this.mergeInterDependentQuestions();
 
     this.extractInterDependentQuestionIndexPos();
 
