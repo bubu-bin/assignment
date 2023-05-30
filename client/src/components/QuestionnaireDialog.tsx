@@ -11,7 +11,7 @@ import { Grid } from '@mui/material';
 import { useEffect, useMemo } from 'react';
 import { FormStatus, FormikValues } from '../types';
 import _ from 'lodash';
-import { MultiHandler } from '../handlers/MultiHandler';
+import { TriggerHandler } from '../handlers/TriggerHandler';
 
 type QuestionnaireDialogProps = {
   onClose: () => void;
@@ -45,19 +45,10 @@ export default function QuestionnaireDialog({
   const { actions, formik } = useFormBuilder({
     onFormSubmit,
     onTrigger: async ({ question: leadingQuestion, value, formikState }) => {
-      const hasInterDependentQuestion =
-        leadingQuestion.interDependentQuestionsId.length > 0;
-
-      const isDuplicate =
-        questionnaireData.data?.find((q) =>
-          leadingQuestion.interDependentQuestionsId.includes(q.id)
-        ) && !leadingQuestion.isMulti;
-
       if (
-        !questionnaireData.data ||
-        !hasInterDependentQuestion ||
-        value === '' ||
-        isDuplicate
+        TriggerHandler.stopCall({
+          leadingQuestion
+        })
       ) {
         return;
       }
@@ -70,17 +61,15 @@ export default function QuestionnaireDialog({
           }
         });
 
-      let payload = [...questionnaireData.data, ...interDependentQuestions];
+      const triggerHandler = new TriggerHandler({
+        questionnaireData: questionnaireData.data as QuestionWithAnswer[],
+        leadingQuestion: leadingQuestion,
+        interDependentQuestions
+      });
 
-      if (leadingQuestion.isMulti) {
-        const multiHandler = new MultiHandler(
-          questionnaireData.data,
-          leadingQuestion,
-          interDependentQuestions
-        );
+      const payload = triggerHandler.getPayload();
 
-        payload = multiHandler.getPayload();
-      }
+      if (!payload) return;
 
       apiDispatch({
         type: 'setData',
