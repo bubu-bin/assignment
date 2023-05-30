@@ -27,7 +27,7 @@ const makeListInterDependentQuestions = ({
         return QuestionService.checkCondition({
           answer,
           questionType: leadingQuestion.questionType.name,
-          inputOutputTrigger
+          conditionToFulfill: JSON.parse(inputOutputTrigger.inputWhen as string)
         });
       }
     );

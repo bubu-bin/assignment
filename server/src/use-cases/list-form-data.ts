@@ -1,6 +1,8 @@
+import { QuestionTypeDefinition } from '@prisma/client';
 import { USER_ID } from '..';
 import { GetFormDataRequestParams } from '../controllers/get-form-data';
 import { Repository } from '../repository';
+import QuestionService from '../services/QuestionService';
 
 const makeListFormData = ({ repository }: { repository: Repository }) => {
   const execute = async (params: GetFormDataRequestParams) => {
@@ -17,7 +19,7 @@ const makeListFormData = ({ repository }: { repository: Repository }) => {
       include: undefined
     });
 
-    const formData = await repository.formDataStore.findMany({
+    let formData = await repository.formDataStore.findMany({
       where: {
         formId: form.id
       },
@@ -35,6 +37,8 @@ const makeListFormData = ({ repository }: { repository: Repository }) => {
 
     return await Promise.all(
       formData.map(async (f) => {
+        const { question } = f;
+
         const interDependentQuestions =
           await repository.questionStore.findInterDependentQuestions({
             where: {
@@ -42,10 +46,27 @@ const makeListFormData = ({ repository }: { repository: Repository }) => {
             }
           });
 
+        let options = f.question.options;
+
+        if (
+          question.isInterDependent &&
+          question.questionType.name === QuestionTypeDefinition.OPTION
+        ) {
+          // TODO: Refactor getOutput method
+          const output = await QuestionService.getOutput({
+            repository,
+            formId: form.id,
+            interDependentQuestionId: question.id
+          });
+
+          options = options.filter((option) => output.includes(option.id));
+        }
+
         return {
           ...f,
           question: {
             ...f.question,
+            options,
             interDependentQuestions
           }
         };
