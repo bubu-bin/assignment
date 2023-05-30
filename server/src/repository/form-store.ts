@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { FormTypeDefinition, Prisma } from '@prisma/client';
 import { Store } from '../config/database';
 import { getErrorMessage } from '../tools';
 import { ServerErrorDefinition } from '../types';
@@ -60,9 +60,15 @@ const makeFormStore = ({ database }: Store) => {
     }
   };
 
-  const findFormType = async ({ where }: { where: any }) => {
+  const findFormType = async ({
+    id,
+    name
+  }: {
+    id?: number;
+    name?: FormTypeDefinition;
+  }) => {
     try {
-      return await database.formType.findFirstOrThrow({ where });
+      return await database.formType.findFirstOrThrow({ where: { id, name } });
     } catch (err) {
       const message = getErrorMessage(err);
 

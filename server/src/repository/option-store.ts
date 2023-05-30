@@ -3,6 +3,7 @@ import { Store } from '../config/database';
 import { ApplicationError } from '../handlers/ApplicationError';
 import { getErrorMessage } from '../tools';
 import { ServerErrorDefinition } from '../types';
+import { Prisma } from '@prisma/client';
 
 const makeOptionStore = ({ database }: Store) => {
   const find = async () => {
@@ -19,9 +20,13 @@ const makeOptionStore = ({ database }: Store) => {
     }
   };
 
-  const findMany = async () => {
+  const findMany = async <T extends Prisma.OptionWhereInput>({
+    where
+  }: {
+    where: T;
+  }) => {
     try {
-      return await database.option.findMany();
+      return await database.option.findMany({ where });
     } catch (err) {
       const message = getErrorMessage(err);
 

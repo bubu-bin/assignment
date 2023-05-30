@@ -12,7 +12,7 @@ const makeAddForm = ({ repository }: { repository: Repository }) => {
     });
 
     const formType = await repository.formStore.findFormType({
-      where: { name: data.formType }
+      name: data.formType
     });
 
     const formData = await Promise.all(

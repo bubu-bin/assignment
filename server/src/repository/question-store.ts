@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { InputTypeDefinition, Prisma } from '@prisma/client';
 import { Store } from '../config/database';
 import { getErrorMessage } from '../tools';
 import { ServerErrorDefinition } from '../types';
@@ -50,16 +50,16 @@ const makeQuestionStore = ({ database }: Store) => {
     }
   };
 
-  const findInterDependentQuestions = async ({
-    leadingQuestionId
+  const findInterDependentQuestions = async <
+    T extends Prisma.QuestionsOnInterDependentQuestionsWhereInput
+  >({
+    where
   }: {
-    leadingQuestionId: number;
+    where: T;
   }) => {
     try {
       return await database.questionsOnInterDependentQuestions.findMany({
-        where: {
-          leadingQuestionId
-        },
+        where,
         include: {
           inputOutputTrigger: true,
           leadingQuestion: {
@@ -90,10 +90,48 @@ const makeQuestionStore = ({ database }: Store) => {
     }
   };
 
+  const findQuestionType = async ({ id }: { id: number }) => {
+    try {
+      return await database.questionType.findFirstOrThrow({ where: { id } });
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.BadRequest,
+        type: ServerErrorDefinition.DATABASE
+      });
+    }
+  };
+
+  const findInputType = async ({
+    id,
+    name
+  }: {
+    id?: number;
+    name?: InputTypeDefinition;
+  }) => {
+    try {
+      return await database.inputType.findFirstOrThrow({
+        where: { id, name }
+      });
+    } catch (err) {
+      const message = getErrorMessage(err);
+
+      throw new ApplicationError({
+        message,
+        statusCode: HttpStatusCode.NotFound,
+        type: ServerErrorDefinition.DATABASE
+      });
+    }
+  };
+
   return {
     find,
     findMany,
-    findInterDependentQuestions
+    findInterDependentQuestions,
+    findQuestionType,
+    findInputType
   };
 };
 

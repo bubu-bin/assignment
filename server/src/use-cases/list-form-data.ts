@@ -37,7 +37,9 @@ const makeListFormData = ({ repository }: { repository: Repository }) => {
       formData.map(async (f) => {
         const interDependentQuestions =
           await repository.questionStore.findInterDependentQuestions({
-            leadingQuestionId: f.question.id
+            where: {
+              leadingQuestionId: f.question.id
+            }
           });
 
         return {
