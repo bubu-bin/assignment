@@ -1,6 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
-import { ShowUser } from '../use-cases/show-user';
 import { ListInterDependentQuestions } from '../use-cases/list-inter-dependent-questions';
+import _ from 'lodash';
+import QuestionService from '../services/QuestionService';
 
 export type GetInterDependentQuestionsQuery = {
   questionId: string;
@@ -16,9 +17,42 @@ const makeGetInterDependentQuestions = ({
     try {
       const query = req.query as GetInterDependentQuestionsQuery;
 
-      const result = await listInterDependentQuestions.execute(query);
+      const interDependentQuestions = (
+        await listInterDependentQuestions.execute(query)
+      ).map((questionOnInterDependentQuestions) => {
+        const { interDependentQuestion, inputOutputTrigger } =
+          questionOnInterDependentQuestions;
 
-      res.send(result);
+        const outputWith = JSON.parse(inputOutputTrigger!.outputWith as string);
+
+        return {
+          ..._.pick(interDependentQuestion, [
+            'id',
+            'isInterDependent',
+            'order',
+            'prompt',
+            'createdAt',
+            'updatedAt',
+            'name',
+            'placeholder',
+            'textFieldType',
+            'isMulti'
+          ]),
+          inputType: interDependentQuestion.inputType.name,
+          options: QuestionService.getOptions({
+            questionType: interDependentQuestion.questionType.name,
+            options: interDependentQuestion.options.filter((option) =>
+              outputWith.includes(option.id)
+            )
+          }),
+          interDependentQuestionsId:
+            interDependentQuestion.interDependentQuestions.map(
+              (interDependentQuestion) => interDependentQuestion.id
+            )
+        };
+      });
+
+      res.send(interDependentQuestions);
     } catch (err) {
       next(err);
     }

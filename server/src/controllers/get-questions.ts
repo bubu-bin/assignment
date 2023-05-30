@@ -1,34 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
 import { ListQuestions } from '../use-cases/list-questions';
 import _ from 'lodash';
-import {
-  Question,
-  InputType,
-  Option,
-  QuestionType,
-  ProductCategoryDefinition,
-  FormTypeDefinition
-} from '@prisma/client';
-
-const getOptions = (
-  question: Question & {
-    inputType: InputType;
-    options: Option[];
-    questionType: QuestionType;
-  }
-) => {
-  switch (question.questionType.name) {
-    case 'OPTION':
-      return question.options.map((o) => _.omit(o, ['questionId']));
-    case 'BOOLEAN':
-      return [
-        { id: 1, value: 'Yes' },
-        { id: 0, value: 'No' }
-      ];
-    case 'INPUT':
-      return null;
-  }
-};
+import { ProductCategoryDefinition, FormTypeDefinition } from '@prisma/client';
+import QuestionService from '../services/QuestionService';
 
 export type GetQuestionsRequestParams = {
   productCategory: ProductCategoryDefinition;
@@ -47,11 +21,9 @@ const makeGetQuestions = ({
         formType: req.query.formType
       } as GetQuestionsRequestParams;
 
-      const result = await listQuestions.execute(params);
-
-      const format = result
-        ?.map((r) => ({
-          ..._.pick(r, [
+      const questions = (await listQuestions.execute(params))
+        .map((question) => ({
+          ..._.pick(question, [
             'id',
             'isInterDependent',
             'order',
@@ -64,12 +36,15 @@ const makeGetQuestions = ({
             'isMulti',
             'interDependentQuestionsId'
           ]),
-          inputType: r.inputType.name,
-          options: getOptions(r)
+          inputType: question.inputType.name,
+          options: QuestionService.getOptions({
+            questionType: question.questionType.name,
+            options: question.options
+          })
         }))
-        .filter((r) => !r.isInterDependent);
+        .filter((question) => !question.isInterDependent);
 
-      res.send(format);
+      res.send(questions);
     } catch (err) {
       next(err);
     }

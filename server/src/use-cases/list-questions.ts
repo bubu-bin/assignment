@@ -23,7 +23,9 @@ const makeListQuestions = ({ repository }: { repository: Repository }) => {
       questions.map(async (question) => {
         const interDependentQuestions =
           await repository.questionStore.findInterDependentQuestions({
-            leadingQuestionId: question.id
+            where: {
+              leadingQuestionId: question.id
+            }
           });
 
         return {
