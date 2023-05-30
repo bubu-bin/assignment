@@ -76,16 +76,16 @@ export default function QuestionnaireDialog({
         payload
       });
 
-      actions.setFormikValues([
-        ...Object.entries(formikState).map(([name, value]) => ({
-          name,
-          value
-        })),
-        ...interDependentQuestions.map((n: any) => ({
-          value: '',
-          name: n.name
-        }))
-      ]);
+      const newFormikValues = payload.map((payload) => {
+        const formikValue = formikState[payload.name];
+
+        return {
+          name: payload.name,
+          value: formikValue ? formikValue : ''
+        };
+      });
+
+      actions.setFormikValues(newFormikValues);
     }
   });
 

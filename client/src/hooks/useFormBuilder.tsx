@@ -30,7 +30,7 @@ const useFormBuilder = ({ onFormSubmit, onTrigger }: UseFormBuilderProps) => {
   });
 
   const setFormikValues = useCallback(
-    (input: Array<{ name: string; value: string }>) => {
+    (input: Array<{ name: string; value: string | string[] }>) => {
       const values = input.map((i) => [i.name, i.value]);
       const setValues = formik.setValues;
       setValues(Object.fromEntries(values));
