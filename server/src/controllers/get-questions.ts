@@ -40,7 +40,8 @@ const makeGetQuestions = ({
           options: QuestionService.getOptions({
             questionType: question.questionType.name,
             options: question.options
-          })
+          }),
+          order: Number(question.order)
         }))
         .filter((question) => !question.isInterDependent);
 

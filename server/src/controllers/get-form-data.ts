@@ -38,7 +38,8 @@ const makeGetFormData = ({ listFormData }: { listFormData: ListFormData }) => {
           formData.question.interDependentQuestions.map(
             (interDependentQuestion) =>
               interDependentQuestion.interDependentQuestionId
-          )
+          ),
+        order: Number(formData.question.order)
       }));
 
       res.send(formData);

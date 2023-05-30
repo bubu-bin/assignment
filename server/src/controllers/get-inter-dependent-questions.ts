@@ -48,7 +48,8 @@ const makeGetInterDependentQuestions = ({
           interDependentQuestionsId:
             interDependentQuestion.interDependentQuestions.map(
               (interDependentQuestion) => interDependentQuestion.id
-            )
+            ),
+          order: Number(interDependentQuestion.order)
         };
       });
 
