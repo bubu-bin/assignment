@@ -23,29 +23,30 @@ type FormatterData = FormData & {
   };
 };
 
-const formatter = (data: FormatterData) => {
-  const { question } = data;
-  let value: unknown;
-  let options: unknown;
-
+const getOptions = (
+  question: Question & {
+    inputType: InputType;
+    options: Option[];
+    questionType: QuestionType;
+  }
+) => {
   switch (question.questionType.name) {
     case 'OPTION':
-      options = question.options.map((option) =>
-        _.omit(option, ['questionId'])
-      );
-      break;
+      return question.options.map((o) => _.omit(o, ['questionId']));
     case 'BOOLEAN':
-      options = [
+      return [
         { id: 1, value: 'Yes' },
         { id: 0, value: 'No' }
       ];
-      break;
     case 'INPUT':
-      options = null;
-      break;
+      return null;
     default:
       'Unhandled action';
   }
+};
+
+const formatter = (data: FormatterData) => {
+  const { question } = data;
 
   return {
     ..._.pick(question, [
@@ -64,7 +65,7 @@ const formatter = (data: FormatterData) => {
     questionType: question.questionType.name,
     productCategory: question.productCategory.name,
     value: data.answer,
-    options: options,
+    options: getOptions(question),
     interDependentQuestionsId: question.interDependentQuestions.map(
       (interDependentQuestion) =>
         interDependentQuestion.interDependentQuestionId

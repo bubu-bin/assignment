@@ -27,14 +27,28 @@ const makeListFormData = ({ repository }: { repository: Repository }) => {
             inputType: true,
             questionType: true,
             options: true,
-            productCategory: true,
-            interDependentQuestions: true
+            productCategory: true
           }
         }
       }
     });
 
-    return formData;
+    return await Promise.all(
+      formData.map(async (f) => {
+        const interDependentQuestions =
+          await repository.questionStore.findInterDependentQuestions({
+            leadingQuestionId: f.question.id
+          });
+
+        return {
+          ...f,
+          question: {
+            ...f.question,
+            interDependentQuestions
+          }
+        };
+      })
+    );
   };
 
   return { execute };
